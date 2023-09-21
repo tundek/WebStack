@@ -202,6 +202,42 @@ And add the following line of code in the `projectlamp.conf` file
 ```
 then `:wq!` then press enter to save
 
+Let us check the content of the `sites-available` directory the directory should now have the projectlamp.conf 
+
+<img src="images/image13.png" width="600" alt="Output">
+
+> Summary: With the above Virtual Host Config, we are now saying Apache should server projectlamp using the /var/www/projectlamp as it's root directory.
+
+*You can comment out the first 2 lines (ServerName & Server Alias)* if you don't want to use domain name to access the server using the # symbol.
+
+Let's now enable the new virtual host by running the command
+
+```
+sudo a2ensite projectlamp
+```
+
+*Fun fact, i think the meaning of a2ensite could be "Apache2 enable Site (a2ensite)" | Or what do you think?, that makes sense to me*
+
+Anyway, remember we checked the content of the sites-available directory we saw a file name 000-default.conf, we need to disable this file because it is responsible for displaying the default files that comes pre-installed on Apache2.
+
+Use the command 
+
+```
+sudo a2dissite 000-default
+```
+
+We also need to run the command to ensure there are no config issues if we get the result `Syntax OK` then everything looks good.
+
+```
+sudo apache2ctl configtest
+```
+
+Finally, let's reload the apache server 
+
+```
+sudo systemctl reload apache2
+```
+
 
 
 ## Enable PHP on the Website
@@ -226,10 +262,22 @@ sudo vim /etc/apache2/mods-enabled/dir.conf
 ```
 
 ##### Output
-<img width="600" src="/Users/appple/Documents/Repositories/WebStack/LAMPSTACK/images/image10.png" >
+<img src="images/image13.png" width="600" alt="Output">
 
 After editing the file, you can save & close the file then restart apache server to effect changes
 
 ```
 sudo systemctl reload apache2
 ```
+
+```
+sudo echo 'Hello LAMP from hostname' $(curl -s http://169.254.169.254/latest/meta-data/public-hostname) 'with public IP' $(curl -s http://169.254.169.254/latest/meta-data/public-ipv4) > /var/www/projectlamp/index.html
+```
+
+We can use the above code to create an index.html file in teh /var/www/projectlamp directory to test our server.
+
+##### Output
+<img src="images/image14.png" width="600" alt="Output">
+
+And BOOM!!! Congratulatios, We have our first website hosted on AWS 
+
